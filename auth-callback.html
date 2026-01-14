@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Signing in...</title>
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-header">
+      <div class="auth-logo">v-read</div>
+      <p>Completing sign in...</p>
+    </div>
+    <div id="status" class="status">Processing authentication...</div>
+  </div>
+
+  <script src="firebase-app-compat.js"></script>
+  <script src="firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script>
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    
+    // Handle the redirect result
+    auth.getRedirectResult().then(async (result) => {
+      if (result.user) {
+        console.log('✅ Signed in:', result.user.email);
+        
+        await chrome.storage.local.set({
+          authenticated: true,
+          userId: result.user.uid,
+          userEmail: result.user.email,
+          userName: result.user.displayName || '',
+          wordsRead: 0
+        });
+        
+        document.getElementById('status').textContent = '✓ Signed in successfully!';
+        document.getElementById('status').className = 'status success';
+        
+        setTimeout(() => window.close(), 1500);
+      } else {
+        document.getElementById('status').textContent = 'No authentication result';
+        document.getElementById('status').className = 'status error';
+      }
+    }).catch((error) => {
+      console.error('❌ Auth error:', error);
+      document.getElementById('status').textContent = 'Error: ' + error.message;
+      document.getElementById('status').className = 'status error';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "V-read",
+  "version": "2.2",
+  "description": "Modern selective speed reading on any content",
+  "permissions": [
+    "activeTab", 
+    "scripting", 
+    "storage",
+    "identity"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "all_frames": true,
+      "match_about_blank": true
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["text-input-modal.html", "auth.html", "auth-callback.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

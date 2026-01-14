@@ -1,0 +1,726 @@
+/* V-read Content Styles - Universal Support */
+:root {
+  --highlight: 187 85% 45%;
+  --highlight-glow: 187 85% 65%;
+  --reader-bg: 0 0% 98%;
+  --reader-text: 0 0% 10%;
+  --transition-highlight: background-color 0.15s ease-in-out;
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --highlight: 187 85% 55%;
+    --highlight-glow: 187 85% 35%;
+    --reader-bg: 0 0% 5%;
+    --reader-text: 0 0% 98%;
+  }
+}
+
+/* Floating Action Buttons - ALWAYS VISIBLE WHEN SHOWN */
+.vread-floating-buttons {
+  position: fixed;
+  display: none;
+  gap: 0.75rem;
+  z-index: 2147483647 !important;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px) scale(0.95);
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0s linear 0.2s;
+  pointer-events: none;
+  padding: 8px;
+}
+
+.vread-floating-buttons.vread-float-visible {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) scale(1) !important;
+  pointer-events: all !important;
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out, visibility 0s linear 0s !important;
+}
+
+/* Force visibility on hover */
+.vread-floating-buttons:hover {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: all !important;
+}
+
+.vread-float-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  background: hsl(var(--reader-bg)) !important;
+  color: hsl(var(--highlight)) !important;
+  border: 3px solid hsl(var(--highlight)) !important;
+  border-radius: 14px;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3), 0 0 0 2px hsl(var(--highlight) / 0.3) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  position: relative;
+  font-size: 0;
+}
+
+.vread-float-btn::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 14px;
+  padding: 3px;
+  background: linear-gradient(135deg, hsl(var(--highlight)), hsl(var(--highlight-glow)));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.vread-float-btn:hover::before {
+  opacity: 1;
+}
+
+.vread-float-btn:hover {
+  background: hsl(var(--highlight)) !important;
+  color: white !important;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 10px 30px hsl(var(--highlight-glow) / 0.5) !important;
+}
+
+.vread-float-btn:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+.vread-float-btn svg {
+  transition: transform 0.2s ease;
+  width: 22px;
+  height: 22px;
+}
+
+.vread-start-btn:hover svg {
+  transform: translateX(2px);
+}
+
+.vread-end-btn:hover svg {
+  transform: translateX(-2px);
+}
+
+.vread-fragment-btn {
+  min-width: 110px !important;
+  background: #1a1a1a !important;
+  border: 3px solid #22d3ee !important;
+  border-radius: 16px !important;
+}
+
+.vread-fragment-btn:hover {
+  background: #2a2a2a !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(34, 211, 238, 0.4) !important;
+}
+
+.vread-fragment-btn svg {
+  filter: drop-shadow(0 2px 4px rgba(34, 211, 238, 0.6));
+}
+
+/* Fragment Markers */
+.vread-fragment-start,
+.vread-fragment-end {
+  background: hsl(var(--highlight) / 0.25) !important;
+  border-radius: 4px;
+  padding: 2px 6px;
+  margin: 0 2px;
+  transition: var(--transition-smooth);
+  display: inline;
+  font-weight: 600;
+  position: relative;
+  box-shadow: 0 0 10px hsl(var(--highlight) / 0.2);
+}
+
+.vread-fragment-start {
+  border-left: 4px solid hsl(var(--highlight));
+  padding-left: 8px;
+}
+
+.vread-fragment-end {
+  border-right: 4px solid hsl(var(--highlight));
+  padding-right: 8px;
+}
+
+.vread-fragment-start::before {
+  content: "▶";
+  color: hsl(var(--highlight));
+  font-size: 0.9em;
+  margin-right: 2px;
+  font-weight: bold;
+  cursor: ew-resize;
+}
+
+.vread-fragment-end::after {
+  content: "◀";
+  color: hsl(var(--highlight));
+  font-size: 0.9em;
+  margin-left: 2px;
+  font-weight: bold;
+  cursor: ew-resize;
+}
+
+.vread-fragment-start:hover,
+.vread-fragment-end:hover {
+  background: hsl(var(--highlight) / 0.4) !important;
+  box-shadow: 0 0 15px hsl(var(--highlight-glow) / 0.4);
+  transform: scale(1.02);
+}
+
+.vread-fragment-start.vread-reading,
+.vread-fragment-end.vread-reading {
+  background: hsl(var(--highlight) / 0.6) !important;
+  box-shadow: 0 0 20px hsl(var(--highlight-glow) / 0.6);
+  animation: vread-pulse 1.5s ease-in-out infinite;
+}
+
+.vread-fragment-start.vread-dragging,
+.vread-fragment-end.vread-dragging {
+  background: hsl(var(--highlight) / 0.5) !important;
+  box-shadow: 0 0 20px hsl(var(--highlight)) !important;
+  cursor: ew-resize !important;
+  user-select: none;
+}
+
+/* Active reading highlight - old progressive style */
+.vread-highlight-active {
+  background: hsl(var(--highlight) / 0.25) !important;
+  border-radius: 3px;
+  padding: 1px 2px;
+  transition: background 0.15s ease-in-out;
+  box-shadow: 0 0 8px hsl(var(--highlight-glow) / 0.3);
+}
+
+/* Current chunk highlight - BLUE + BOLD */
+.vread-chunk-highlight {
+  font-weight: 900 !important;
+  background: hsla(193, 16%, 89%, 0.4) !important; /* Light blue background */
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .vread-chunk-highlight {
+    background: hsl(193, 16%, 89%, 0.4) !important;
+  }
+}
+
+/* Ensure links keep their blue highlight color */
+.vread-chunk-highlight a,
+a.vread-chunk-highlight {
+  color: hsl(193, 16%, 89%, 0.4) !important;
+}
+
+/* Speed Reader Overlay - Main display */
+.vread-speed-reader-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: hsl(var(--reader-bg) / 0.98);
+  color: hsl(var(--reader-text));
+  padding: 3rem 4rem;
+  border-radius: 20px;
+  z-index: 999998;
+  font-family: Inter, system-ui, sans-serif;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 0 0 1px hsl(var(--highlight) / 0.2),
+    0 0 40px hsl(var(--highlight-glow) / 0.3);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  pointer-events: none;
+  min-width: 500px;
+  text-align: center;
+}
+
+.vread-reader-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+.vread-reader-word {
+  font-size: 3rem;
+  font-weight: 700;
+  color: hsl(var(--highlight));
+  line-height: 1.2;
+  min-height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-shadow: 0 0 20px hsl(var(--highlight) / 0.3);
+  animation: vread-word-pulse 0.2s ease-out;
+}
+
+@keyframes vread-word-pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.vread-reader-progress {
+  font-size: 1rem;
+  color: hsl(var(--reader-text) / 0.6);
+  font-weight: 500;
+}
+
+/* Custom text reading display */
+.vread-custom-reading-display {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: hsl(var(--reader-bg) / 0.98);
+  color: hsl(var(--reader-text));
+  padding: 3rem 4rem;
+  border-radius: 20px;
+  z-index: 999998;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 1.25rem;
+  line-height: 1.8;
+  max-width: 80vw;
+  max-height: 60vh;
+  overflow-y: auto;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.3),
+    0 0 0 1px hsl(var(--highlight) / 0.2),
+    0 0 40px hsl(var(--highlight-glow) / 0.3);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  pointer-events: none;
+  min-width: 400px;
+  text-align: center;
+}
+
+.vread-text-read {
+  color: hsl(var(--highlight));
+  font-weight: 600;
+}
+
+.vread-text-unread {
+  color: hsl(var(--reader-text) / 0.4);
+}
+
+/* Text Input Modal */
+.vread-text-input-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: vread-modal-enter 0.3s ease-out;
+}
+
+.vread-text-input-modal.vread-modal-closing {
+  animation: vread-modal-exit 0.3s ease-out;
+}
+
+.vread-modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.vread-modal-content {
+  position: relative;
+  background: hsl(var(--reader-bg));
+  border-radius: 20px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 
+    0 25px 70px rgba(0, 0, 0, 0.4),
+    0 0 0 1px hsl(var(--highlight) / 0.3),
+    0 0 60px hsl(var(--highlight-glow) / 0.4);
+  animation: vread-modal-content-enter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.vread-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid hsl(var(--highlight) / 0.2);
+}
+
+.vread-modal-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: hsl(var(--reader-text));
+  margin: 0;
+}
+
+.vread-modal-header svg {
+  color: hsl(var(--highlight));
+}
+
+.vread-modal-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: hsl(var(--reader-text) / 0.6);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vread-modal-close:hover {
+  background: hsl(var(--highlight) / 0.1);
+  color: hsl(var(--highlight));
+  transform: scale(1.1);
+}
+
+.vread-modal-textarea {
+  flex: 1;
+  padding: 2rem;
+  border: none;
+  background: transparent;
+  color: hsl(var(--reader-text));
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.8;
+  resize: none;
+  outline: none;
+}
+
+.vread-modal-textarea::placeholder {
+  color: hsl(var(--reader-text) / 0.4);
+}
+
+.vread-modal-actions {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid hsl(var(--highlight) / 0.2);
+}
+
+.vread-modal-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  font-family: inherit;
+}
+
+.vread-modal-btn-secondary {
+  background: hsl(var(--reader-text) / 0.05);
+  color: hsl(var(--reader-text));
+  border: 1px solid hsl(var(--reader-text) / 0.1);
+}
+
+.vread-modal-btn-secondary:hover {
+  background: hsl(var(--reader-text) / 0.1);
+  transform: translateY(-1px);
+}
+
+.vread-modal-btn-primary {
+  background: hsl(var(--highlight));
+  color: white;
+  box-shadow: 0 4px 16px hsl(var(--highlight-glow) / 0.4);
+}
+
+.vread-modal-btn-primary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px hsl(var(--highlight-glow) / 0.5);
+}
+
+.vread-modal-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Animations */
+@keyframes vread-pop {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes vread-bounce-in {
+  0% {
+    transform: scale(0.3) translateY(-20px);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05) translateY(-5px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes vread-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px hsl(var(--highlight-glow) / 0.6);
+  }
+  50% {
+    box-shadow: 0 0 30px hsl(var(--highlight-glow) / 0.8);
+  }
+}
+
+@keyframes vread-modal-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes vread-modal-exit {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vread-modal-content-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus rings */
+.vread-fragment-start:focus,
+.vread-fragment-end:focus,
+.vread-modal-close:focus,
+.vread-modal-btn:focus {
+  outline: 2px solid hsl(var(--highlight));
+  outline-offset: 2px;
+}
+
+/* Welcome hint */
+.vread-welcome-hint {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 9999998;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.vread-welcome-hint.vread-hint-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.vread-hint-content {
+  background: hsl(var(--reader-bg));
+  border: 2px solid hsl(var(--highlight));
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px hsl(var(--highlight) / 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 400px;
+}
+
+.vread-hint-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.vread-hint-text {
+  flex: 1;
+}
+
+.vread-hint-text strong {
+  color: hsl(var(--highlight));
+  font-size: 1.1rem;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.vread-hint-text p {
+  color: hsl(var(--reader-text));
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.vread-hint-close {
+  padding: 0.5rem 1rem;
+  background: hsl(var(--highlight));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.vread-hint-close:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* Reading Controls */
+.vread-reading-controls {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  z-index: 9999998;
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: hsl(var(--reader-bg) / 0.98);
+  border: 2px solid hsl(var(--highlight));
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px hsl(var(--highlight) / 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.vread-reading-controls.vread-controls-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.vread-control-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(var(--reader-bg));
+  border: 2px solid hsl(var(--highlight) / 0.3);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  color: hsl(var(--highlight));
+}
+
+.vread-control-btn:hover {
+  background: hsl(var(--highlight));
+  color: white;
+  border-color: hsl(var(--highlight));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px hsl(var(--highlight) / 0.4);
+}
+
+.vread-control-btn:active {
+  transform: translateY(0) scale(0.95);
+}
+
+.vread-control-btn svg {
+  transition: transform 0.2s ease;
+}
+
+.vread-control-btn:hover svg {
+  transform: scale(1.1);
+}
+
+/* Persistent on-page controls */
+.vread-persistent-controls {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999999;
+  display: flex;
+  gap: 10px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.vread-persistent-controls:hover {
+  opacity: 1;
+}
+
+.vread-persistent-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: hsl(var(--highlight));
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s;
+}
+
+.vread-persistent-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px hsl(var(--highlight) / 0.4);
+}
+
+.vread-persistent-btn:active {
+  transform: scale(0.95);
+}

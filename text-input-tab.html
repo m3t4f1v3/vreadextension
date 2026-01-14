@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>V-Read - Custom Text</title>
+  <style>
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 0 0% 5%;
+      --primary: 187 85% 45%;
+      --primary-foreground: 0 0% 100%;
+      --secondary: 0 0% 96%;
+      --muted-foreground: 0 0% 45%;
+      --border: 0 0% 90%;
+      --radius: 0.5rem;
+      
+      font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background: 0 0% 8%;
+        --foreground: 0 0% 98%;
+        --primary: 187 85% 55%;
+        --secondary: 0 0% 15%;
+        --muted-foreground: 0 0% 60%;
+        --border: 0 0% 20%;
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2rem 3rem;
+      border-bottom: 1px solid hsl(var(--border));
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: hsl(var(--primary));
+      text-shadow: 0 0 30px hsl(var(--primary) / 0.4);
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .settings-section {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .setting-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .setting-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: hsl(var(--muted-foreground));
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .setting-input-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .setting-input {
+      width: 80px;
+      padding: 0.5rem 0.75rem;
+      background: hsl(var(--secondary));
+      border: 1px solid hsl(var(--border));
+      border-radius: 8px;
+      color: hsl(var(--foreground));
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .setting-input:focus {
+      outline: none;
+      border-color: hsl(var(--primary));
+      box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+    }
+
+    .setting-unit {
+      font-size: 0.875rem;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 3rem;
+      gap: 2rem;
+    }
+
+    .text-area-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 2rem;
+      padding: 1rem;
+      background: hsl(var(--secondary));
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .stat svg {
+      color: hsl(var(--primary));
+    }
+
+    .stat-value {
+      font-weight: 600;
+      color: hsl(var(--foreground));
+    }
+
+    textarea {
+      flex: 1;
+      padding: 2rem;
+      border: 2px solid hsl(var(--border));
+      border-radius: var(--radius);
+      background: transparent;
+      color: hsl(var(--foreground));
+      font-family: inherit;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      resize: none;
+      outline: none;
+      transition: all 0.3s ease;
+      min-height: 300px;
+    }
+
+    textarea:focus {
+      border-color: hsl(var(--primary));
+      box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+    }
+
+    textarea::placeholder {
+      color: hsl(var(--muted-foreground) / 0.5);
+    }
+
+    .controls {
+      display: flex;
+      gap: 1rem;
+      padding: 2rem 3rem;
+      border-top: 1px solid hsl(var(--border));
+      background: hsl(var(--background));
+      position: sticky;
+      bottom: 0;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 2rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+      box-shadow: 0 4px 16px hsl(var(--primary) / 0.3);
+      flex: 1;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px hsl(var(--primary) / 0.4);
+      filter: brightness(1.1);
+    }
+
+    .btn-secondary {
+      background: hsl(var(--secondary));
+      color: hsl(var(--foreground));
+      border: 1px solid hsl(var(--border));
+    }
+
+    .btn-secondary:hover {
+      background: hsl(var(--border));
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .container {
+      animation: fade-in 0.5s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo-section">
+      <div class="logo">V</div>
+      <h1>Custom Text Speed Reading</h1>
+    </div>
+    <div class="settings-section">
+      <div class="setting-group">
+        <label class="setting-label">Speed</label>
+        <div class="setting-input-group">
+          <input type="number" id="wpmInput" class="setting-input" min="50" value="300" />
+          <span class="setting-unit">WPM</span>
+        </div>
+      </div>
+      <div class="setting-group">
+        <label class="setting-label">Chunk Size</label>
+        <div class="setting-input-group">
+          <input type="number" id="chunkInput" class="setting-input" min="1" value="3" />
+          <span class="setting-unit">words</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="stats-bar">
+      <div class="stat">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </svg>
+        <span><span class="stat-value" id="wordCount">0</span> words</span>
+      </div>
+      <div class="stat">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span>~<span class="stat-value" id="readTime">0</span> min read</span>
+      </div>
+    </div>
+
+    <div class="text-area-wrapper">
+      <textarea id="textInput" placeholder="Paste or type your text here...
+
+V-Read will speed read it for you with customizable speed and chunk size." autofocus></textarea>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="clearBtn" class="btn btn-secondary">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="3 6 5 6 21 6"/>
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+      </svg>
+      Clear
+    </button>
+    <button id="startBtn" class="btn btn-primary">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polygon points="5 3 19 12 5 21 5 3"/>
+      </svg>
+      Start Reading
+    </button>
+  </div>
+
+  <script>
+    const textInput = document.getElementById('textInput');
+    const wordCount = document.getElementById('wordCount');
+    const readTime = document.getElementById('readTime');
+    const wpmInput = document.getElementById('wpmInput');
+    const chunkInput = document.getElementById('chunkInput');
+    const startBtn = document.getElementById('startBtn');
+    const clearBtn = document.getElementById('clearBtn');
+
+    // Load settings from storage
+    chrome.storage.sync.get(['wpm', 'chunk'], (data) => {
+      if (data.wpm) {
+        wpmInput.value = data.wpm;
+      }
+      if (data.chunk) {
+        chunkInput.value = data.chunk;
+      }
+      updateReadTime();
+    });
+
+    // Save settings when changed
+    wpmInput.addEventListener('input', () => {
+      const value = parseInt(wpmInput.value);
+      if (value >= 50) {
+        chrome.storage.sync.set({ wpm: value });
+        updateReadTime();
+      }
+    });
+
+    chunkInput.addEventListener('input', () => {
+      const value = parseInt(chunkInput.value);
+      if (value >= 1) {
+        chrome.storage.sync.set({ chunk: value });
+      }
+    });
+
+    // Update stats
+    function updateStats() {
+      const text = textInput.value.trim();
+      const words = text.split(/\s+/).filter(w => w).length;
+      wordCount.textContent = words;
+      updateReadTime();
+    }
+
+    function updateReadTime() {
+      const text = textInput.value.trim();
+      const words = text.split(/\s+/).filter(w => w).length;
+      const wpm = parseInt(wpmInput.value) || 300;
+      readTime.textContent = Math.max(1, Math.ceil(words / wpm));
+    }
+
+    textInput.addEventListener('input', updateStats);
+
+    // Clear button
+    clearBtn.addEventListener('click', () => {
+      if (textInput.value.trim() && !confirm('Clear all text?')) {
+        return;
+      }
+      textInput.value = '';
+      chrome.storage.local.remove(['draftText']);
+      updateStats();
+      textInput.focus();
+    });
+
+    // Start reading
+    startBtn.addEventListener('click', async () => {
+      const text = textInput.value.trim();
+      if (!text) {
+        alert('Please enter some text first!');
+        return;
+      }
+
+      const wpm = parseInt(wpmInput.value) || 300;
+      const chunk = parseInt(chunkInput.value) || 3;
+
+      if (wpm < 50) {
+        alert('Speed must be at least 50 WPM');
+        return;
+      }
+
+      if (chunk < 1) {
+        alert('Chunk size must be at least 1');
+        return;
+      }
+
+      // Save settings
+      chrome.storage.sync.set({ wpm, chunk });
+
+      // Try to inject into the current active tab
+      try {
+        const tabs = await chrome.tabs.query({ active: true, currentWindow: false });
+        
+        if (tabs.length > 0) {
+          const tab = tabs[0];
+          
+          // Send message to content script
+          chrome.tabs.sendMessage(tab.id, {
+            type: 'addCustomTextAndRead',
+            text: text,
+            wpm: wpm,
+            chunk: chunk
+          }, (response) => {
+            if (chrome.runtime.lastError) {
+              // If content script not loaded, try to inject it
+              chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                files: ['content.js']
+              }).then(() => {
+                chrome.scripting.insertCSS({
+                  target: { tabId: tab.id },
+                  files: ['styles.css']
+                }).then(() => {
+                  // Try sending message again
+                  setTimeout(() => {
+                    chrome.tabs.sendMessage(tab.id, {
+                      type: 'addCustomTextAndRead',
+                      text: text,
+                      wpm: wpm,
+                      chunk: chunk
+                    });
+                  }, 500);
+                });
+              }).catch((err) => {
+                console.error('Could not inject script:', err);
+                alert('Please navigate to a webpage first, then try again.');
+              });
+            } else {
+              console.log('Reading started successfully');
+            }
+          });
+          
+          // Switch to that tab
+          chrome.tabs.update(tab.id, { active: true });
+          chrome.windows.update(tab.windowId, { focused: true });
+        } else {
+          alert('Please open a webpage first, then try again.');
+        }
+      } catch (error) {
+        console.error('Error starting reading:', error);
+        alert('Error starting reading. Please try again.');
+      }
+    });
+
+    // Load saved text from storage
+    chrome.storage.local.get(['draftText'], (data) => {
+      if (data.draftText) {
+        textInput.value = data.draftText;
+        updateStats();
+      }
+    });
+
+    // Auto-save draft
+    let saveTimeout;
+    textInput.addEventListener('input', () => {
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(() => {
+        chrome.storage.local.set({ draftText: textInput.value });
+      }, 1000);
+    });
+
+    updateStats();
+  </script>
+</body>
+</html>
