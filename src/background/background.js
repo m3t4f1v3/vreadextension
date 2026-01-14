@@ -17,14 +17,14 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "openTextInputTab") {
     chrome.tabs.create({
-      url: chrome.runtime.getURL("text-input-tab.html")
+      url: chrome.runtime.getURL("src/text-input-tab/text-input-tab.html")
     });
     sendResponse({ success: true });
   }
   
   if (message.type === 'openAuth') {
     chrome.windows.create({
-      url: chrome.runtime.getURL('auth.html'),
+      url: chrome.runtime.getURL('src/auth/auth.html'),
       type: 'popup',
       width: 480,
       height: 720,

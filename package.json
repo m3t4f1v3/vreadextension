@@ -1,0 +1,15 @@
+{
+  "name": "vread",
+  "type": "module",
+  "version": "2.2",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@crxjs/vite-plugin": "^2.0.3",
+    "vite": "^7.0.5",
+    "vite-plugin-zip-pack": "^1.2.4"
+  }
+}

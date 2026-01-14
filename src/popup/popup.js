@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   manageFragmentsBtn.onclick = () => {
     chrome.windows.create({
-      url: "fragment-manager.html",
+      url: chrome.runtime.getURL("src/fragment-manager/fragment-manager.html"),
       type: "popup",
       width: 400,
       height: 600

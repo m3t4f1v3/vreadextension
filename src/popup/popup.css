@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'DynaPuff';
-  src: url('fonts/DynaPuff-VariableFont_wdth,wght.ttf') format('truetype');
+  src: url('/fonts/DynaPuff-VariableFont_wdth,wght.ttf') format('truetype');
   font-weight: 100 900;
 }
 
