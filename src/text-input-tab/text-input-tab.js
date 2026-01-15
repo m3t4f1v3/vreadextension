@@ -103,11 +103,11 @@ startBtn.addEventListener('click', async () => {
             // If content script not loaded, try to inject it
             chrome.scripting.executeScript({
             target: { tabId: tab.id },
-            files: ['content.js']
+            files: [chrome.runtime.getURL('src/content/content.js')]
             }).then(() => {
             chrome.scripting.insertCSS({
                 target: { tabId: tab.id },
-                files: ['styles.css']
+                files: [chrome.runtime.getURL('styles.css')]
             }).then(() => {
                 // Try sending message again
                 setTimeout(() => {

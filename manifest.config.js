@@ -29,7 +29,7 @@ export default defineManifest({
   ],
   web_accessible_resources: [
     {
-      resources: ["src/content/text-input-modal.html", "src/auth/auth.html", "src/auth/auth-callback.html", "src/fragment-manager/fragment-manager.html"],
+      resources: ["src/text-input-tab/text-input-tab.html", "src/auth/auth.html", "src/auth/auth-callback.html", "src/fragment-manager/fragment-manager.html"],
       matches: ["<all_urls>"]
     }
   ]
