@@ -61,11 +61,11 @@ chrome.runtime.onInstalled.addListener(async () => {
       try {
         await chrome.scripting.executeScript({
           target: { tabId: tab.id },
-          files: ['content.js']
+          files: [chrome.runtime.getURL('src/content/content.js')]
         });
         await chrome.scripting.insertCSS({
           target: { tabId: tab.id },
-          files: ['styles.css']
+          files: [chrome.runtime.getURL('styles.css')]
         });
       } catch (error) {
         console.log('Could not inject into tab:', tab.url);
